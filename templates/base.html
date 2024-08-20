@@ -6,6 +6,13 @@
     <title>Document</title>
 </head>
 <body>
+    <div class='navbar'>
+        <a href="{% url "accounts:login" %}">로그인</a>
+        <form action="{% url 'accounts:logout' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">로그아웃</button>
+        </form>
+    </div>
     {% block content %}
     {% endblock content%}
 </body>
