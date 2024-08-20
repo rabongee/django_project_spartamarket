@@ -7,11 +7,15 @@
 </head>
 <body>
     <div class='navbar'>
-        <a href="{% url "accounts:login" %}">로그인</a>
+        {% if request.user.is_authenticated %}
         <form action="{% url 'accounts:logout' %}" method="POST">
             {% csrf_token %}
             <button type="submit">로그아웃</button>
         </form>
+        {% else %}
+        <a href="{% url "accounts:login" %}">로그인</a>
+        <a href="{% url "accounts:signup" %}">회원가입</a>
+        {% endif %}
     </div>
     {% block content %}
     {% endblock content%}
