@@ -4,6 +4,12 @@
 	<h1>{{ username }}의 프로필 페이지</h1>
 	<div>
 		<p>username : {{ username }}</p>
+
 	</div>
+    <a href="{% url "accounts:update" %}">회원정보수정</a>
+    <form action="{% url "accounts:delete" %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="회원탈퇴"></input>
+    </form>
 	<a href="/index/">홈으로 돌아가기</a>
 {% endblock content %}

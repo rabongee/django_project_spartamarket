@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>products page</h1>
+    <ul>
+        {% for product in products %}
+        <li>
+            <div>[{{ product.id }}] 글 제목 : {{ product.title }}</div>
+            <div>글 내용 : {{ product.content }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock content %}
