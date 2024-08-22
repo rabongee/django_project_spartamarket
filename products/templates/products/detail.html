@@ -10,5 +10,10 @@
     <p>수정 일시 : {{ product.updated_at }}</p>
     <br>
     <a href="{% url "products:market" %}">Market 홈으로 돌아가기</a>
+    
+    <form action="{% url "products:delete" product.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+    </form>
 
 {% endblock content %}

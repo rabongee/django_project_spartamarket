@@ -30,3 +30,11 @@ def create(request):
     price = request.POST.get("price")
     product = Product.objects.create(title=title, content=content, price=price)
     return redirect("products:detail", product.pk)
+
+
+def delete(request, pk):
+    if request.method == "POST":
+        product = Product.objects.get(pk=pk)
+        product.delete()
+        return redirect("products:market")
+    return redirect("products:detail", pk)
