@@ -13,15 +13,19 @@ def users(request):
 
 def profile(request, username):
     member = get_object_or_404(get_user_model(), username=username)
+    followers = member.followers.all().count()
+    followings = member.followings.all().count()
     context = {
         "member": member,
+        "followers": followers,
+        "followings": followings,
     }
     return render(request, "users/profile.html", context)
 
 
 def my_prdouct(request, username):
     author_id = get_object_or_404(User, username=username).id
-    products = Product.objects.filter(author_id=author_id)
+    products = Product.objects.filter(author_id=author_id).order_by("-pk")
     context = {
         "username": username,
         "products": products,
