@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import (render, redirect, get_object_or_404)
 from django.views.decorators.http import require_POST
-from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from accounts.models import User
+from products.models import Product
 
 # Create your views here.
 
@@ -16,6 +17,17 @@ def profile(request, username):
         "member": member,
     }
     return render(request, "users/profile.html", context)
+
+
+def my_prdouct(request, username):
+    author_id = get_object_or_404(User, username=username).id
+    products = Product.objects.filter(author_id=author_id)
+    context = {
+        "username": username,
+        "products": products,
+    }
+    return render(request, "users/my_product.html", context)
+
 
 @require_POST
 def follow(request, user_pk):
