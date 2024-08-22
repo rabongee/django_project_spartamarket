@@ -1,5 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods, require_POST
 from .models import Product
+from .forms import ProductForm
 
 
 def index(request):
@@ -15,44 +18,48 @@ def market(request):
 
 
 def detail(request, pk):
-    product = Product.objects.get(pk=pk)
+    product = get_object_or_404(Product, pk=pk)
     context = {"product": product}
     return render(request, "products/detail.html", context)
 
 
-def new(request):
-    return render(request, "products/new.html")
-
-
+@login_required
+@require_http_methods(["GET", "POST"])
 def create(request):
-    title = request.POST.get("title")
-    content = request.POST.get("content")
-    price = request.POST.get("price")
-    product = Product.objects.create(title=title, content=content, price=price)
-    return redirect("products:detail", product.pk)
-
-
-def edit(request, pk):
-    product = Product.objects.get(pk=pk)
-    context = {"product": product}
-    return render(request, "products/edit.html", context)
-
-
-def update(request, pk):
-    title = request.POST.get("title")
-    content = request.POST.get("content")
-    price = request.POST.get("price")
-    product = Product.objects.get(pk=pk)
-    product.title = title
-    product.content = content
-    product.price = price
-    product.save()
-    return redirect("products:detail", product.pk)
-
-
-def delete(request, pk):
     if request.method == "POST":
-        product = Product.objects.get(pk=pk)
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            product = form.save()
+            return redirect("products:detail", product.pk)
+    else:
+        form = ProductForm()
+        
+    context = {"form": form}
+    return render(request, "products/create.html", context)
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def update(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == "POST":
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            product = form.save()
+            return redirect("products:detail", product.pk)
+    else:
+        form = ProductForm(instance=product)
+        
+    context = {
+        "form": form,
+        "product": product,
+        }
+    return render(request, "products/update.html", context)
+    
+
+@require_POST
+def delete(request, pk):
+    if request.user.is_authenticated:
+        product = get_object_or_404(Product, pk=pk)
         product.delete()
-        return redirect("products:market")
-    return redirect("products:detail", pk)
+    return redirect("products:market")

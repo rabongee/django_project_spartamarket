@@ -3,9 +3,20 @@
 {% block content %}
 
     <h2>[ Market 페이지 ] 물건목록 보여줍니다!</h2>
-    <a href="{% url "products:new" %}">
-        <button>물건 등록하기</button>
-    </a>
+
+    {% if request.user.is_authenticated %}
+    
+        <a href="{% url "products:create" %}">
+            <button>물건 등록하기</button>
+        </a>
+    
+    {% else %}
+
+        <a href="{% url "accounts:login" %}">
+            <button>로그인 후 물건 등록하기</button>
+        </a>  
+    
+    {% endif %}
 
     {% for product in products %}
 

@@ -3,18 +3,9 @@
 {% block content %}
 
     <h2>[ New 페이지 ] 새로운 물건 등록하기!</h2>
-
     <form action="{% url 'products:create' %}" method="POST">
         {% csrf_token %}
-        <label for="title">제목</label><br>
-        <input type="text" name="title" id="title"><br><br>
-        
-        <label for="">내용</label><br>
-        <textarea name="content" id="content" cols="22" rows="10"></textarea><br><br>
-
-        <label for="price">가격</label><br>
-        <input type="number" name="price" id="price"><br><br>
-
+        {{ form.as_p }}
         <button type="submit">저장</button>
     </form>
     <br>
