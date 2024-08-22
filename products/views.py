@@ -32,6 +32,24 @@ def create(request):
     return redirect("products:detail", product.pk)
 
 
+def edit(request, pk):
+    product = Product.objects.get(pk=pk)
+    context = {"product": product}
+    return render(request, "products/edit.html", context)
+
+
+def update(request, pk):
+    title = request.POST.get("title")
+    content = request.POST.get("content")
+    price = request.POST.get("price")
+    product = Product.objects.get(pk=pk)
+    product.title = title
+    product.content = content
+    product.price = price
+    product.save()
+    return redirect("products:detail", product.pk)
+
+
 def delete(request, pk):
     if request.method == "POST":
         product = Product.objects.get(pk=pk)

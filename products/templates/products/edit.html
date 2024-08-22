@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2>[ Edit 페이지 ] 등록한 물건 수정하기!</h2>
+
+    <form action="{% url 'products:update' product.pk %}" method="POST">
+        {% csrf_token %}
+        <label for="title">제목</label><br>
+        <input type="text" name="title" id="title" value="{{ product.title }}"><br><br>
+        
+        <label for="">내용</label><br>
+        <textarea name="content" id="content" cols="22" rows="10">{{ product.content }}</textarea><br><br>
+
+        <label for="price">가격</label><br>
+        <input type="number" name="price" id="price" value="{{ product.price }}"><br><br>
+
+        <button type="submit">수정</button>
+    </form>
+    <br>
+    <a href="{% url "products:detail" product.pk %}">이전으로 돌아가기</a>
+
+{% endblock content %}
