@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from accounts.models import User
 from products.models import Product
 
+
 # Create your views here.
 
 
