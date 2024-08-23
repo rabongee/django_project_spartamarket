@@ -5,9 +5,9 @@ from django.views.decorators.http import require_http_methods, require_POST
 from .models import Product
 from .forms import ProductForm
 
+
 def index(request):
     return render(request, 'index.html')
-
 
 
 def market(request):
@@ -31,11 +31,13 @@ def create(request):
     if request.method == "POST":
         form = ProductForm(request.POST)
         if form.is_valid():
-            product = form.save()
+            product = form.save(commit=False)
+            product.author = request.user
+            product.save()
             return redirect("products:detail", product.pk)
     else:
         form = ProductForm()
-        
+
     context = {"form": form}
     return render(request, "products/create.html", context)
 
@@ -51,13 +53,13 @@ def update(request, pk):
             return redirect("products:detail", product.pk)
     else:
         form = ProductForm(instance=product)
-        
+
     context = {
         "form": form,
         "product": product,
-        }
+    }
     return render(request, "products/update.html", context)
-    
+
 
 @require_POST
 def delete(request, pk):
@@ -65,4 +67,3 @@ def delete(request, pk):
         product = get_object_or_404(Product, pk=pk)
         product.delete()
     return redirect("products:market")
-
