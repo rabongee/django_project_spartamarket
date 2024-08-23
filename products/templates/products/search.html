@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>search</h1>
+    <ul>
+    {% for search_prdouct in search_products %}
+        <li>
+            <a href="{% url "products:detail" search_prdouct.pk %}">{{search_prdouct}}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock content %}

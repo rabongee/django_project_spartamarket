@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
 from .models import Product
+from accounts.models import User
 from .forms import ProductForm
+
 
 def index(request):
     return render(request, 'index.html')
-
 
 
 def market(request):
@@ -36,7 +38,7 @@ def create(request):
             return redirect("products:detail", product.pk)
     else:
         form = ProductForm()
-        
+
     context = {"form": form}
     return render(request, "products/create.html", context)
 
@@ -52,13 +54,13 @@ def update(request, pk):
             return redirect("products:detail", product.pk)
     else:
         form = ProductForm(instance=product)
-        
+
     context = {
         "form": form,
         "product": product,
-        }
+    }
     return render(request, "products/update.html", context)
-    
+
 
 @require_POST
 def delete(request, pk):
@@ -66,6 +68,16 @@ def delete(request, pk):
         product = get_object_or_404(Product, pk=pk)
         product.delete()
     return redirect("products:market")
+
+
+def search(request):
+    search_word = request.GET.get("search")
+    search_products = Product.objects.filter(
+        Q(title__icontains=search_word) | Q(content__icontains=search_word) | Q(author__username__icontains=search_word))
+    context = {
+        "search_products": search_products
+    }
+    return render(request, 'products/search.html', context)
 
 
 @require_POST

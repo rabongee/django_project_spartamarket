@@ -8,6 +8,7 @@ class CustomUserCreationForm(UserCreationForm):
         model = get_user_model()
         fields = UserCreationForm.Meta.fields + ()
 
+
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
@@ -16,6 +17,7 @@ class CustomUserChangeForm(UserChangeForm):
             "first_name",
             "last_name",
             "email",
+            "image",
         ]
 
     def __init__(self, *args, **kwargs):
