@@ -12,6 +12,10 @@ class Product(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="products"
     )
     
+    like_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name="like_products"
+    )
+    
     def __str__(self):
         return self.title
 
