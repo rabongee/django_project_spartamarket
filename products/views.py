@@ -78,3 +78,15 @@ def search(request):
         "search_products": search_products
     }
     return render(request, 'products/search.html', context)
+
+
+@require_POST
+def like(request, pk):
+    if request.user.is_authenticated:
+        product = get_object_or_404(Product, pk=pk)
+        if product.like_users.filter(pk=request.user.pk).exists():
+            product.like_users.remove(request.user)
+        else:
+            product.like_users.add(request.user)
+        return redirect("products:market")
+    return redirect("accounts:login")
