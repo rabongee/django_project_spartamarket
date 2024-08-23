@@ -5,7 +5,7 @@
 <ul>
     {% for product in products %}
     <li>
-        <a href="{% url "products:product_detail" product.id %}">[{{ product.id }}] {{ product.title }}</a>
+        <a href="{% url "products:detail" product.id %}">[{{ product.id }}] {{ product.title }}</a>
     </li>
     {% endfor %}
 </ul>

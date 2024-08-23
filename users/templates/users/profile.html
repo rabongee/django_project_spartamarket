@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 	<h1>{{ member.username }}의 프로필 페이지</h1>
+    <img src="{% static "users/user.png" %}" alt="Not Found">
 	<div>
 		<p>username : {{ member.username }}</p>
         <p>가입일 : {{ user.date_joined }}</p>

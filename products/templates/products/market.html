@@ -3,6 +3,10 @@
 {% block content %}
 
     <h2>[ Market 페이지 ] 물건목록 보여줍니다!</h2>
+    <form action="{% url "products:search" %}" method="GET">
+        <input type="text" name="search">
+        <button type="submit">search</button>
+    </form>
 
     {% if request.user.is_authenticated %}
     
