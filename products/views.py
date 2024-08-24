@@ -27,10 +27,9 @@ def detail(request, pk):
 
 
 @login_required
-@require_http_methods(["GET", "POST"])
 def create(request):
     if request.method == "POST":
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
             product.author = request.user
