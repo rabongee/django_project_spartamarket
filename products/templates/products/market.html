@@ -29,9 +29,13 @@
         <form action="{% url "products:like" product.pk %}" method="POST">
             {% csrf_token %}
             {% if request.user in product.like_users.all %}
-                <input type="submit" value="찜안함">
+                <button class="btn btn-link text-danger">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
             {% else %}
-                <input type="submit" value="찜하기">
+                <button class="btn btn-link text-danger">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
             {% endif %}
         </form>
         <hr>
