@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
+from django.contrib import messages
 from .models import Product
 from accounts.models import User
 from .forms import ProductForm
@@ -34,6 +35,7 @@ def create(request):
             product = form.save(commit=False)
             product.author = request.user
             product.save()
+            messages.success(request, "등록이 완료되었습니다!!!  확인해보세요!")
             return redirect("products:detail", product.pk)
     else:
         form = ProductForm()

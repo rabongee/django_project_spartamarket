@@ -2,6 +2,34 @@
 
 {% block content %}
 
+    <style>
+        .success {
+            color: #ffffff;
+            background-color: #68b06d;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .messages {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0px;
+        }
+    </style>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
     <h2>[ Detail 페이지 ] 물건 상세 내용!!</h2>
 
     {% if product.image %}
