@@ -23,11 +23,16 @@ def market(request):
 
 def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    context = {"product": product}
+    hashtags = product.tag_hashtags.all()
+    context = {
+        "product": product,
+        "hashtags": hashtags,
+    }
     return render(request, "products/detail.html", context)
 
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def create(request):
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES)
@@ -35,6 +40,8 @@ def create(request):
             product = form.save(commit=False)
             product.author = request.user
             product.save()
+            hashtags = form.cleaned_data.get('hashtags', [])
+            product.add_hashtags(hashtags)
             messages.success(request, "등록이 완료되었습니다!!!  확인해보세요!")
             return redirect("products:detail", product.pk)
     else:
@@ -51,7 +58,15 @@ def update(request, pk):
     if request.method == "POST":
         form = ProductForm(request.POST, instance=product)
         if form.is_valid():
-            product = form.save()
+            product = form.save(commit=False) 
+            old_hashtags = list(product.tag_hashtags.all())
+            product.tag_hashtags.clear()
+            hashtags = form.cleaned_data.get('hashtags', [])
+            product.add_hashtags(hashtags)
+            product.save()
+            for hashtag in old_hashtags:
+                if not hashtag.tag_products.exists():
+                    hashtag.delete()
             return redirect("products:detail", product.pk)
     else:
         form = ProductForm(instance=product)

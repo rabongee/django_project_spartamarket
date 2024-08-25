@@ -42,6 +42,12 @@
     <p>물건 가격 : {{ product.price }}원</p>
     <p>작성 일시 : {{ product.created_at }}</p>
     <p>수정 일시 : {{ product.updated_at }}</p>
+    <p>해시 태그</p>
+    <ul>
+        {% for hashtag in hashtags %}
+            <li>#{{ hashtag.keyword }}</li>
+        {% endfor %}
+    </ul>
     <br>
     <a href="{% url "products:market" %}">Market 홈으로 돌아가기</a>
     

@@ -24,6 +24,11 @@
         <a href="{% url "products:detail" product.pk %}">
             <p>ㅇ 물건이름 : {{ product.title }}</p>
             <p>ㅇ 물건가격 : {{ product.price }}원</p>
+            <ul>
+                {% for hashtag in hashtags %}
+                    <li>#{{ hashtag.keyword }}</li>
+                {% endfor %}
+            </ul>
         </a>
 
         <form action="{% url "products:like" product.pk %}" method="POST">
