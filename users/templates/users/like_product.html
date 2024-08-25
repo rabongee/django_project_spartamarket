@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>like_product page</h1>
+<ul>
+    {% for product in products %}
+    <li>
+        <a href="{% url "products:detail" product.id %}">[{{ product.id }}] {{ product.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+<a href="{% url "users:profile" username %}">돌아가기</a>
+
+
+{% endblock content %}

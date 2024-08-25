@@ -34,6 +34,16 @@ def my_prdouct(request, username):
     return render(request, "users/my_product.html", context)
 
 
+def like_prdouct(request, username):
+    author = get_object_or_404(User, username=username)
+    products = author.like_products.all()
+    context = {
+        "username": username,
+        "products": products,
+    }
+    return render(request, "users/like_product.html", context)
+
+
 @require_POST
 def follow(request, user_pk):
     if request.user.is_authenticated:
