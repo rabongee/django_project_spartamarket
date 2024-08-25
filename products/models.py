@@ -15,6 +15,8 @@ class Product(models.Model):
     like_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="like_products"
     )
+
+    views = models.PositiveIntegerField(default=0)
     
     def __str__(self):
         return self.title

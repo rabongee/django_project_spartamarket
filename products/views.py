@@ -22,6 +22,8 @@ def market(request):
 
 def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
+    product.views += 1
+    product.save()
     like = product.like_users.all()
     context = {
         "product": product,
