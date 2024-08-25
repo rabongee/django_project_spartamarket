@@ -22,7 +22,11 @@ def market(request):
 
 def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    context = {"product": product}
+    like = product.like_users.all()
+    context = {
+        "product": product,
+        "like": like,
+    }
     return render(request, "products/detail.html", context)
 
 
