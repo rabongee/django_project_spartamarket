@@ -3,7 +3,7 @@
 {% block content %}
 
     <h2>[ New 페이지 ] 새로운 물건 등록하기!</h2>
-    <form action="{% url 'products:create' %}" method="POST">
+    <form action="{% url 'products:create' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">저장</button>

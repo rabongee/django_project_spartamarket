@@ -2,13 +2,52 @@
 
 {% block content %}
 
+    <style>
+        .success {
+            color: #ffffff;
+            background-color: #68b06d;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .messages {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0px;
+        }
+    </style>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
     <h2>[ Detail 페이지 ] 물건 상세 내용!!</h2>
+
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.image }}">
+    {% endif %}
+
     <h3>물건 이름 : {{ product.title }}</h3>
     <p>작성자 : {{ product.author.username }}</p>
     <p>상세 내용 : {{ product.content }}</p>
     <p>물건 가격 : {{ product.price }}원</p>
     <p>작성 일시 : {{ product.created_at }}</p>
     <p>수정 일시 : {{ product.updated_at }}</p>
+    <p>해시 태그</p>
+    <ul>
+        {% for hashtag in hashtags %}
+            <li>#{{ hashtag.keyword }}</li>
+        {% endfor %}
+    </ul>
     <br>
     <a href="{% url "products:market" %}">Market 홈으로 돌아가기</a>
     
