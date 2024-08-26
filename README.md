@@ -3,7 +3,7 @@
 spartamarket
 
 
-## 📖 목차
+##  목차
 1. [프로젝트 소개](#프로젝트-소개)
 2. [팀소개](#팀소개)
 3. [프로젝트 계기](#프로젝트-계기)
@@ -17,12 +17,12 @@ spartamarket
 11. [프로젝트 파일 구조](#프로젝트-파일-구조)
 12. [Trouble Shooting](#trouble-shooting)
     
-## 👨‍🏫 프로젝트 소개
+##  프로젝트 소개
 
 spartamarket
  - 중고거래 플랫폼의 기본적인 웹 기능 구현
 
-## 팀소개
+##  팀소개
 - 팀 작심삼일 ( 마음먹고 3일 내로 끝낸다.)
 
 - 김동민 : 
@@ -30,7 +30,7 @@ spartamarket
 - 배민석 : 
 - 이서원 : 
 
-## 프로젝트 계기
+##  프로젝트 계기
 
 Django Teamproject 수행
 
@@ -63,23 +63,23 @@ Django Teamproject 수행
 
 ### ✔️  DBMS
 
-## 서비스 구조
+##  서비스 구조
 
 
 
-## 와이어프레임
+##  와이어프레임
 
 
 
-## API 명세서
+##  API 명세서
 
 
-## ERD
+##  ERD
 
 
-## 프로젝트 파일 구조
+##  프로젝트 파일 구조
 
 
 
 
-## Trouble Shooting
+##  Trouble Shooting
