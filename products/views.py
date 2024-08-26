@@ -20,7 +20,7 @@ def market(request):
             'like_users')).order_by('-like_count', '-pk')
     else:
         products = Product.objects.all().order_by(order_by)
-    
+
     context = {
         "products": products,
     }
@@ -32,12 +32,12 @@ def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     product.views += 1
     product.save()
-    like = product.like_users.all()
+    likes = product.like_users.all()
     hashtags = product.tag_hashtags.all()
     context = {
         "product": product,
         "hashtags": hashtags,
-        "like": like,
+        "likes": likes,
     }
     return render(request, "products/detail.html", context)
 
@@ -67,9 +67,9 @@ def create(request):
 def update(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == "POST":
-        form = ProductForm(request.POST, instance=product)
+        form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
-            product = form.save(commit=False) 
+            product = form.save(commit=False)
             old_hashtags = list(product.tag_hashtags.all())
             product.tag_hashtags.clear()
             hashtags = form.cleaned_data.get('hashtags', [])
@@ -100,7 +100,9 @@ def delete(request, pk):
 def search(request):
     search_word = request.GET.get("search")
     search_products = Product.objects.filter(
-        Q(title__icontains=search_word) | Q(content__icontains=search_word) | Q(author__username__icontains=search_word))
+        Q(title__icontains=search_word)
+        | Q(content__icontains=search_word)
+        | Q(author__username__icontains=search_word)).order_by("-pk")
     context = {
         "search_products": search_products
     }

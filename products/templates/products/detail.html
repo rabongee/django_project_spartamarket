@@ -38,8 +38,8 @@
 
     <h3>물건 이름 : {{ product.title }}</h3>
     <p>조회수: {{ product.views }}</p>
-    <p>찜한 사람의 수 : {{ like|length }}</p>
-    <p>작성자 : {{ product.author.username }}</p>
+    <p>찜한 사람의 수 : {{ likes|length }}</p>
+    <a href="{% url "users:profile" product.author.username %}">작성자 : {{ product.author.username }}</a>
     <p>상세 내용 : {{ product.content }}</p>
     <p>물건 가격 : {{ product.price }}원</p>
     <p>작성 일시 : {{ product.created_at }}</p>

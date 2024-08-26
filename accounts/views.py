@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.contrib.auth.forms import  (
+from django.contrib.auth.forms import (
     AuthenticationForm,
     PasswordChangeForm,
 )
@@ -19,7 +19,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             auth_login(request, user)
-            return redirect('index')
+            return redirect('products:market')
     else:
         form = CustomUserCreationForm()
     context = {"form": form}
@@ -29,10 +29,12 @@ def signup(request):
 @require_http_methods(["GET", "POST"])
 def update(request):
     if request.method == "POST":
-        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
+        form = CustomUserChangeForm(
+            request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect("index")
+            username = request.user.username
+            return redirect("users:profile", username)
     else:
         form = CustomUserChangeForm(instance=request.user)
     context = {"form": form}
@@ -56,7 +58,7 @@ def change_password(request):
 def delete(request):
     if request.user.is_authenticated:
         request.user.delete()
-    return redirect("index")
+    return redirect("products:market")
 
 
 @require_http_methods(["GET", "POST"])
@@ -65,7 +67,7 @@ def login(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect("index")
+            return redirect("products:market")
     else:
         form = AuthenticationForm()
     context = {
@@ -78,4 +80,4 @@ def login(request):
 def logout(request):
     if request.method == "POST":
         auth_logout(request)
-    return redirect('index')
+    return redirect('products:market')
