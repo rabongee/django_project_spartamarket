@@ -13,7 +13,8 @@
         <p>가입일 : {{ user.date_joined }}</p>
         <p>{{ member.username }}의 팔로워 수 : {{ followers }}</p>
         <p>{{ member.username }}의 팔로잉 수 : {{ followings }}</p>
-        <a href="{% url "users:my_product" member.username %}">내가 쓴 게시물</a>
+        <a href="{% url "users:my_product" member.username %}">내가 쓴 게시물</a><br>
+        <a href="{% url "users:like_product" member.username %}">찜한 게시물</a>
         {% if request.user != member %} 
         <form action="{% url "users:follow" member.pk %}" method="post">
             {% csrf_token %}

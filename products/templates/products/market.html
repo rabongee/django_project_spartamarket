@@ -9,7 +9,13 @@
         <input type="text" name="search">
         <button type="submit">search</button>
     </form>
-
+    <form action="{% url 'products:market' %}" method="GET">
+        <label for="order_by">정렬 기준:</label>
+        <select id="order_by" name="order_by" onchange="this.form.submit()">
+            <option value="-pk" {% if request.GET.order_by == "-pk" %}selected{% endif %}>최신순</option>
+            <option value="-like_count" {% if request.GET.order_by == "-like_count" %}selected{% endif %}>인기도순</option>
+        </select>
+    </form>
     {% if request.user.is_authenticated %}
         <a href="{% url "products:create" %}">
             <button>물건 등록하기</button>

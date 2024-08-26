@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib import messages
@@ -13,7 +13,14 @@ def index(request):
 
 
 def market(request):
-    products = Product.objects.all().order_by("-pk")
+    order_by = request.GET.get('order_by', '-pk')
+
+    if order_by == '-like_count':
+        products = Product.objects.annotate(like_count=Count(
+            'like_users')).order_by('-like_count', '-pk')
+    else:
+        products = Product.objects.all().order_by(order_by)
+    
     context = {
         "products": products,
     }
@@ -23,10 +30,14 @@ def market(request):
 
 def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
+    product.views += 1
+    product.save()
+    like = product.like_users.all()
     hashtags = product.tag_hashtags.all()
     context = {
         "product": product,
         "hashtags": hashtags,
+        "like": like,
     }
     return render(request, "products/detail.html", context)
 
