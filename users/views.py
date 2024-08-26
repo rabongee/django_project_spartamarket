@@ -36,7 +36,7 @@ def my_prdouct(request, username):
 
 def like_prdouct(request, username):
     author = get_object_or_404(User, username=username)
-    products = author.like_products.all()
+    products = author.like_products.all().order_by("-pk")
     context = {
         "username": username,
         "products": products,

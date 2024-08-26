@@ -1,15 +1,43 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+    
+</style>
+{% endblock head %}
 
 {% block content %}
-<h1>like_product page</h1>
-<ul>
-    {% for product in products %}
-    <li>
-        <a href="{% url "products:detail" product.id %}">[{{ product.id }}] {{ product.title }}</a>
-    </li>
-    {% endfor %}
-</ul>
-<a href="{% url "users:profile" username %}">돌아가기</a>
-
-
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">찜한 목록</h1>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.image }}">
+                {% else %}
+                <img src="{% static 'products/no_image.png' %}" class="card-img-top" alt="{{ product.image }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    <p class="card-text">{{ product.description|truncatewords:20 }}</p>
+                    <a href="{% url 'products:detail' product.id %}" class="btn btn-primary">자세히 보기</a>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">작성일: {{ product.created_at|date:"Y년 m월 d일" }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'users:profile' username %}" class="btn btn-secondary">돌아가기</a>
+    </div>
+</div>
 {% endblock content %}

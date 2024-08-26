@@ -8,7 +8,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = "__all__"
-        exclude = ("author", "like_users", "tag_hashtags")
+        exclude = ("author", "like_users", "tag_hashtags", "views")
 
     def clean_hashtags(self):
         hashtags_str = self.cleaned_data.get('hashtags', '').strip()
