@@ -1,12 +1,137 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+    h1 {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #303030;
+        text-align: center;
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .col-md-4 {
+        padding-left: 30px; 
+        padding-right: 30px;
+        padding-bottom: 30px;
+    }
+
+    .card-body {
+        height: 90px;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .card-title {
+        font-weight: 500;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+        font-weight: 900;
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+
+    .card-footer {
+        display: flex;
+    }
+
+    .like-count button {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        margin-right: 25px;
+    }
+
+    .view-count {
+        display: flex;
+        align-items: center;
+    }
+    
+    .like-count i,
+    .view-count i {
+        margin-right: 10px;
+    }
+    
+    .like-count p,
+    .view-count p {
+        margin: 0;
+        font-size: 1rem;
+    }
+</style>
+{% endblock head %}
 
 {% block content %}
-    <h1>search</h1>
-    <ul>
-    {% for search_prdouct in search_products %}
-        <li>
-            <a href="{% url "products:detail" search_prdouct.pk %}">{{search_prdouct}}</a>
-        </li>
-    {% endfor %}
-    </ul>
+
+    <div class="container-fluid p-0 mt-0">
+        <div class="banner-container">
+            <img src="{% static "products/search.png" %}" alt="search-banner" class="img-fluid">
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">
+            <i class="fa-solid fa-magnifying-glass"></i> 
+            {% if search_type == "author" %}
+                [ 판매자 == "{{ search_word }}" ] 검색결과
+            {% elif search_type == "title" %}
+                [ "{{ search_word }}" in 글제목 ] 검색결과
+            {% else %}
+                "{{ search_word }}"에 대한 검색결과 == None
+            {% endif %}
+        </h1>
+        
+        {% if search_products %}
+            <div class="row">
+                {% for search_product in search_products %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            
+                            {% if search_product.image %}
+                            <img src="{{ search_product.image.url }}" class="card-img-top" alt="{{ search_product.title }}_image">
+                            {% else %}
+                            <img src="{% static 'products/no_image.png' %}" class="card-img-top" alt="no_image">
+                            {% endif %}
+                            
+                            <div class="card-body">
+                                <a href="{% url "products:detail" search_product.pk %}" class="text-dark text-decoration-none">
+                                    <h5 class="card-title">{{ search_product.title }}</h5>
+                                    <p class="card-text">{{ search_product.price }}원</p>
+                                </a>
+                            </div>
+                            <div class="card-footer text-right">
+                                <form action="{% url "products:like" search_product.pk %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <span class="like-count">
+                                        {% if request.user in search_product.like_users.all %}
+                                            <button class="btn btn-link text-danger">
+                                                <i class="fa-solid fa-heart"></i><p>{{ search_product.like_count }}</p>
+                                            </button>
+                                        {% else %}
+                                            <button class="btn btn-link text-danger">
+                                                <i class="fa-regular fa-heart"></i><p>{{ search_product.like_count }}</p>
+                                            </button>
+                                        {% endif %}
+                                    </span>
+                                </form>
+                                <span class="view-count">
+                                    <i class="fa-solid fa-eye"></i><p>{{ search_product.views }}</p>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center">검색 결과가 없습니다ㅠㅠ</p>
+        {% endif %}
+    </div>
 {% endblock content %}

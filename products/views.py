@@ -102,12 +102,28 @@ def delete(request, pk):
 
 def search(request):
     search_word = request.GET.get("search")
-    search_products = Product.objects.filter(
+    search_products_by_title = Product.objects.filter(
         Q(title__icontains=search_word)
-        | Q(content__icontains=search_word)
-        | Q(author__username__icontains=search_word)).order_by("-pk")
+    ).order_by("-pk")
+    
+    search_products_by_author = Product.objects.filter(
+        Q(author__username__icontains=search_word)
+    ).order_by("-pk")
+
+    if search_products_by_author.exists():
+        search_products = search_products_by_author
+        search_type = "author"
+    elif search_products_by_title.exists():
+        search_products = search_products_by_title
+        search_type = "title"
+    else:
+        search_products = Product.objects.none()
+        search_type = None
+
     context = {
-        "search_products": search_products
+        "search_products": search_products,
+        "search_word": search_word,
+        "search_type": search_type,
     }
     return render(request, 'products/search.html', context)
 
