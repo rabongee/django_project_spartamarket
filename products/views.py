@@ -62,7 +62,6 @@ def create(request):
             product.save()
             hashtags = form.cleaned_data.get('hashtags', [])
             product.add_hashtags(hashtags)
-            messages.success(request, "등록이 완료되었습니다!!!  확인해보세요!!!!!")
             return redirect("products:detail", product.pk)
     else:
         form = ProductForm()
@@ -75,6 +74,11 @@ def create(request):
 @require_http_methods(["GET", "POST"])
 def update(request, pk):
     product = get_object_or_404(Product, pk=pk)
+    
+    if product.author != request.user:
+        messages.error(request, "남의 게시물은 수정할 수 없습니다!!!")
+        return redirect("products:market")
+    
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
@@ -102,7 +106,13 @@ def update(request, pk):
 def delete(request, pk):
     if request.user.is_authenticated:
         product = get_object_or_404(Product, pk=pk)
-        product.delete()
+        if product.author == request.user:
+            product.delete()
+            messages.success(request, "게시물이 삭제되었습니다!!!")
+        else:
+            messages.error(request, "남의 게시물은 삭제할 수 없습니다!!!")
+    else:
+        messages.error(request, "삭제하려면 로그인하세요!!!")
     return redirect("products:market")
 
 

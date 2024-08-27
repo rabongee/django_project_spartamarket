@@ -2,16 +2,6 @@
 {% load static %}
 {% block content %}
 
-{% if messages %}
-    <script>
-        window.addEventListener('load', function() {
-            {% for message in messages %}
-                alert("{{ message|escapejs }}");
-            {% endfor %}
-        });
-    </script>
-{% endif %}
-
 <style>
     .product-detail-container {
         max-width: 700px;

@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block head %}
+
 <style> 
 
     h1 {
@@ -278,4 +279,15 @@
             {% endfor %}
         </div>
     </div>
+
+    {% if messages %}
+        <script>
+            window.addEventListener('load', function() {
+                {% for message in messages %}
+                    alert("{{ message|escapejs }}");
+                {% endfor %}
+            });
+        </script>
+    {% endif %}
+
 {% endblock content %}
