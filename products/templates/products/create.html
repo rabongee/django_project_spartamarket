@@ -95,6 +95,7 @@
         <form action="{% url 'products:create' %}" method="POST" enctype="multipart/form-data" class="product-form mt-4">
             {% csrf_token %}
             {{ form.as_p }}
+
             <div class="btn-container">
                 <button type="submit" class="btn btn-primary">저장하기</button>
                 <a href="{% url "products:market" %}" class="btn btn-outline-secondary">Market 홈으로 돌아가기</a>
