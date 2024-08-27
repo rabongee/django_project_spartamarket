@@ -13,9 +13,9 @@
     }
 
     .col-md-4 {
-        padding-left: 20px; 
-        padding-right: 20px;
-        padding-bottom: 20px;
+        padding-left: 30px; 
+        padding-right: 30px;
+        padding-bottom: 30px;
     }
 
     .card-body {
@@ -40,15 +40,31 @@
         margin-bottom: 0;
     }
 
-    .like-count {
-        font-size: 0.9rem;
-        color: #555;
+    .card-footer {
+        display: flex;
+    }
+
+    .like-count button {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        margin-right: 25px;
     }
 
     .view-count {
-        margin-left: 30px;
-        font-size: 0.9rem;
-        color: #555;
+        display: flex;
+        align-items: center;
+    }
+    
+    .like-count i,
+    .view-count i {
+        margin-right: 10px;
+    }
+    
+    .like-count p,
+    .view-count p {
+        margin: 0;
+        font-size: 1rem;
     }
 
     .banner-container {
@@ -60,6 +76,9 @@
     
     .container-fluid.mt-4 {
         margin-top: 0 !important;
+        padding-left: 100px;
+        padding-right: 100px;
+        
     }
 
     .banner-image {
@@ -174,19 +193,20 @@
                         <div class="card-footer text-right">
                             <form action="{% url "products:like" product.pk %}" method="POST" class="d-inline">
                                 {% csrf_token %}
-                                {% if request.user in product.like_users.all %}
-                                    <button class="btn btn-link text-danger">
-                                        <i class="fa-solid fa-heart"></i>
-                                    </button>
-                                {% else %}
-                                    <button class="btn btn-link text-danger">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                {% endif %}
-                                <span class="like-count">(좋아요수)</span>
+                                <span class="like-count">
+                                    {% if request.user in product.like_users.all %}
+                                        <button class="btn btn-link text-danger">
+                                            <i class="fa-solid fa-heart"></i><p>{{ product.like_count }}</p>
+                                        </button>
+                                    {% else %}
+                                        <button class="btn btn-link text-danger">
+                                            <i class="fa-regular fa-heart"></i><p>{{ product.like_count }}</p>
+                                        </button>
+                                    {% endif %}
+                                </span>
                             </form>
                             <span class="view-count">
-                                <i class="fa-solid fa-eye"></i> (조회수)
+                                <i class="fa-solid fa-eye"></i><p>{{ product.views }}</p>
                             </span>
                         </div>
                     </div>

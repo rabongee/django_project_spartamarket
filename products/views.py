@@ -16,10 +16,13 @@ def market(request):
     order_by = request.GET.get('order_by', '-pk')
 
     if order_by == '-like_count':
-        products = Product.objects.annotate(like_count=Count(
-            'like_users')).order_by('-like_count', '-pk')
+        products = Product.objects.annotate(
+            like_count=Count('like_users')
+        ).order_by('-like_count', '-pk')
     else:
-        products = Product.objects.all().order_by(order_by)
+        products = Product.objects.annotate(
+            like_count=Count('like_users')
+        ).order_by(order_by)
 
     context = {
         "products": products,
@@ -32,12 +35,10 @@ def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     product.views += 1
     product.save()
-    likes = product.like_users.all()
     hashtags = product.tag_hashtags.all()
     context = {
         "product": product,
         "hashtags": hashtags,
-        "likes": likes,
     }
     return render(request, "products/detail.html", context)
 
