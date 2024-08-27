@@ -90,23 +90,3 @@
 ##  ERD
 ![ER다이어그램](https://github.com/rabongee/django_project_spartamarket/blob/dev/ER%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.png)
 
-##  프로젝트 파일 구조
-SPARTAMARKET
-
-│
-
-├── accounts
-
-├── media
-
-├── products
-
-├── spartamarket
-
-├── static
-
-├── templates
-
-├── users
-
-├── manage.py
