@@ -1,16 +1,103 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+    .banner-container {
+        max-width: 100%;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .banner-container img {
+        width: 60%;
+        height: auto;
+        max-width: 1000px;
+    }
+
+    .product-form {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ebebeb;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-form input[type="text"],
+    .product-form input[type="file"],
+    .product-form select,
+    .product-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 1rem;
+        border: 1.5px solid #b3b3b3;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .product-form textarea {
+        height: 120px;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 100px;
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        color: #ffffff;
+        background-color: #fa969b;
+        border-color: #cfcfcf;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 7px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        color: #ffffff;
+        background-color: #f06969;
+        border-color: #6e6e6e;
+    }
+    
+    .btn-outline-secondary {
+        color: #ffffff;
+        background-color: #949494;
+        border: 1px solid #cfcfcf;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 7px;
+        cursor: pointer;
+    }
+    
+    .btn-outline-secondary:hover {
+        color: #ffffff;
+        background-color: #4f4f4f;
+        border-color: #6e6e6e;
+    }
+
+</style>
+
+{% endblock head %}
 
 {% block content %}
+    <div class="container mt-5">
 
-    <h2>[ Edit 페이지 ] 등록한 물건 수정하기!</h2>
+        <div class="banner-container text-center mb-4">
+            <img src="{% static 'products/update.png' %}" alt="update_banner_img" class="img-fluid">
+        </div>
 
-    <form action="{% url 'products:update' product.pk %}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        
-        <button type="submit">수정</button>
-    </form>
-    <br>
-    <a href="{% url "products:detail" product.pk %}">이전으로 돌아가기</a>
-
+        <form action="{% url 'products:update' product.pk %}" method="POST" enctype="multipart/form-data" class="product-form mt-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="btn-container">
+                <button type="submit" class="btn btn-primary">수정하기</button>
+                <a href="{% url "products:detail" product.pk %}" class="btn btn-outline-secondary">이전 페이지로 돌아가기</a>
+            </div>
+        </form>
+    </div>
 {% endblock content %}
