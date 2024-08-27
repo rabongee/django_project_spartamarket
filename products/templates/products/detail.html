@@ -255,6 +255,8 @@
     <div class="action-buttons">
         {% if page_from == 'like_product' %}
             <a href="{% url 'users:like_product' username=request.user.username %}" class="btn-outline-secondary">내가 찜한 목록으로 돌아가기</a>
+        {% elif page_from == 'my_product' %}
+            <a href="{% url 'users:my_product' username=request.user.username %}" class="btn-outline-secondary">내가 작성한 목록으로 돌아가기</a>
         {% else %}
             <a href="{% url "products:market" %}" class="btn-outline-secondary">Market으로 돌아가기</a>
         {% endif %}

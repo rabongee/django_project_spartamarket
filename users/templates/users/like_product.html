@@ -174,7 +174,7 @@
                 <div class="card-body">
                     <a href="{% url 'products:detail' product.pk %}?ref=like_product" class="text-dark text-decoration-none">
                         <h5 class="card-title">{{ product.title }}</h5>
-                        <p class="card-text">{{ product.description|truncatewords:20 }}</p>
+                        <p class="card-text">{{ product.price }} 원</p>
                     </a>
                 </div>
                 <div class="card-footer">

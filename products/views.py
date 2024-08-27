@@ -62,7 +62,7 @@ def create(request):
             product.save()
             hashtags = form.cleaned_data.get('hashtags', [])
             product.add_hashtags(hashtags)
-            messages.success(request, "등록이 완료되었습니다!!!  확인해보세요!")
+            messages.success(request, "등록이 완료되었습니다!!!  확인해보세요!!!!!")
             return redirect("products:detail", product.pk)
     else:
         form = ProductForm()
