@@ -91,4 +91,13 @@
 
 
 ##  프로젝트 파일 구조
-
+SPARTAMARKET/
+│
+├── accounts/
+├── media/
+├── products/
+├── spartamarket/
+├── static/
+├── templates/
+├── users/
+├── manage.py
