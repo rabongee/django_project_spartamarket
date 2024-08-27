@@ -73,9 +73,9 @@
 |9|회원정보수정 수행|POST|/accounts/update/|
 |10|비밀번호수정 페이지 이동|GET|/accounts/password/|
 |11|비밀번호수정 수행|POST|/accounts/password/|
-|12|유저 프로필 조회|GET|users/{username}/|
-|13|프로필 유저가 등록한 게시물 조회|GET|users/{username}/my_product/|
-|13|프로필 유저가 찜한 게시물 조회|GET|users/{username}/like_product/|
+|12|유저 프로필 조회|GET|/users/{username}/|
+|13|프로필 유저가 등록한 게시물 조회|GET/|users/{username}/my_product/|
+|13|프로필 유저가 찜한 게시물 조회|GET|/users/{username}/like_product/|
 |14|유저 팔로우|POST|/users/{user_id}/follow/|
 |15|전체 물품 페이지 조회|GET|/products/|
 |16|물품 상세 페이지 조회|GET|/products/{product_id}/|
