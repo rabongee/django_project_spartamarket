@@ -62,8 +62,30 @@
 ##  API 명세서
 |Index|기능|method type|API Path|
 |---|---|---|------|
-
-
+|1|MAIN|GET|/index/|
+|2|로그인 페이지 이동|GET|/accounts/login/|
+|3|로그인 수행|POST|/accounts/login/|
+|4|로그아웃 수행|POST|/accounts/logout/|
+|5|회원가입 페이지 이동|GET|/accounts/signup/|
+|6|회원가입 수행|POST|/accounts/signup/|
+|7|회원탈퇴 수행|POST|/accounts/delete/|
+|8|회원정보수정 페이지 이동|GET|/accounts/update/|
+|9|회원정보수정 수행|POST|/accounts/update/|
+|10|비밀번호수정 페이지 이동|GET|/accounts/password/|
+|11|비밀번호수정 수행|POST|/accounts/password/|
+|12|유저 프로필 조회|GET|users/{username}/|
+|13|프로필 유저가 등록한 게시물 조회|GET|users/{username}/my_product/|
+|13|프로필 유저가 찜한 게시물 조회|GET|users/{username}/like_product/|
+|14|유저 팔로우|POST|/users/{user_id}/follow/|
+|15|전체 물품 페이지 조회|GET|/products/|
+|16|물품 상세 페이지 조회|GET|/products/{product_id}/|
+|17|물품 등록 페이지 이동|GET|/products/create/|
+|18|물품 등록 수행|POST|/products/create/|
+|19|물품 수정 페이지 이동|GET|/products/{product_id}/update/|
+|20|물품 수정 수행|POST|/products/{product_id}/update/|
+|21|물품 삭제 수행|POST|/products/{product_id}/delete/|
+|22|검색 물품 조회|GET|/products/search/|
+|23|찜하기 기능|POST|/products/{product_id}/like/|
 
 ##  ERD
 
