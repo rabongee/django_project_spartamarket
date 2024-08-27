@@ -92,10 +92,14 @@
     <div class="container mt-4">
         <h1 class="text-center mb-4">
             <i class="fa-solid fa-magnifying-glass"></i> 
-            {% if search_type == "author" %}
-                [ 판매자 == "{{ search_word }}" ] 검색결과
-            {% elif search_type == "title" %}
-                [ "{{ search_word }}" in 글제목 ] 검색결과
+            {% if search_type == "title" %}
+                [ "{{ search_word }}" in 글 제목 ]
+            {% elif search_type == "content" %}
+                [ "{{ search_word }}" in 글 내용 ]
+            {% elif search_type == "author" %}
+                [ 작성자 == "{{ search_word }}" ]
+            {% elif search_type == "hashtag" %}
+                [ 해시태그 == "{{ search_word }}" ]
             {% else %}
                 "{{ search_word }}"에 대한 검색결과 == None
             {% endif %}
@@ -143,7 +147,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <p class="text-center">검색 결과가 없습니다ㅠㅠ</p>
+            <p class="text-center">입력하신 검색어에 해당하는 작성자도 없고 글제목도 없고 글내용도 없고 해시태그도 없습니다.</p>
         {% endif %}
     </div>
 {% endblock content %}

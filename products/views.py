@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib import messages
 from .models import Product
-from accounts.models import User
 from .forms import ProductForm
 
 
@@ -102,23 +101,42 @@ def delete(request, pk):
 
 def search(request):
     search_word = request.GET.get("search")
-    search_products_by_title = Product.objects.filter(
-        Q(title__icontains=search_word)
-    ).order_by("-pk")
     
-    search_products_by_author = Product.objects.filter(
-        Q(author__username__icontains=search_word)
-    ).order_by("-pk")
-
-    if search_products_by_author.exists():
-        search_products = search_products_by_author
-        search_type = "author"
-    elif search_products_by_title.exists():
-        search_products = search_products_by_title
-        search_type = "title"
-    else:
+    if not search_word:
         search_products = Product.objects.none()
         search_type = None
+    else:
+        search_by_title = Product.objects.filter(
+            Q(title__icontains=search_word)
+        ).order_by("-pk")
+        
+        search_by_content = Product.objects.filter(
+            Q(content__icontains=search_word)
+        ).order_by("-pk")
+        
+        search_by_author = Product.objects.filter(
+            Q(author__username__icontains=search_word)
+        ).order_by("-pk")
+        
+        search_by_hashtag = Product.objects.filter(
+            Q(tag_hashtags__keyword__icontains=search_word)
+        ).order_by("-pk")
+
+        if search_by_title.exists():
+            search_products = search_by_title
+            search_type = "title"
+        elif search_by_content.exists():
+            search_products = search_by_content
+            search_type = "content"
+        elif search_by_author.exists():
+            search_products = search_by_author
+            search_type = "author"
+        elif search_by_hashtag.exists():
+            search_products = search_by_hashtag
+            search_type = "hashtag"
+        else:
+            search_products = Product.objects.none()
+            search_type = None
 
     context = {
         "search_products": search_products,
