@@ -32,12 +32,16 @@
         font-weight: 500;
         font-size: 1.2rem
         margin-bottom: 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
     }
 
     .card-text {
         font-weight: 900;
         font-size: 1.1rem;
         margin-bottom: 0;
+        white-space: nowrap;
+        overflow: hidden;
     }
 
     .card-footer {
@@ -173,9 +177,9 @@
                     <div class="card h-100">
 
                         {% if product.image %}
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }} 이미지">
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}_image">
                         {% else %}
-                        <img src="{% static 'products/no_image.png' %}" class="card-img-top" alt="no image available">
+                        <img src="{% static 'products/no_image.png' %}" class="card-img-top" alt="no_image">
                         {% endif %}
 
                         <div class="card-body">

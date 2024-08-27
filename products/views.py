@@ -35,10 +35,12 @@ def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     product.views += 1
     product.save()
+    like = product.like_users.all()
     hashtags = product.tag_hashtags.all()
     context = {
         "product": product,
         "hashtags": hashtags,
+        "like": like,
     }
     return render(request, "products/detail.html", context)
 

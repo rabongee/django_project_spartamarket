@@ -1,64 +1,242 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 
-    <style>
-        .success {
-            color: #ffffff;
-            background-color: #68b06d;
-            padding: 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            text-align: center;
-        }
+<style>
+    .product-detail-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+    }
 
-        .messages {
-            list-style-type: none;
-            padding: 0;
-            margin: 20px 0px;
-        }
-    </style>
+    .product-image-container {
+        position: relative;
+        width: 100%;
+        padding-top: 70%;
+        overflow: hidden;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
 
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
-                    {{ message }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    .product-image-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        cursor: pointer;
+    }
 
+    .product-image-container img:hover {
+        opacity: 0.8;
+    }
 
-    <h2>[ Detail 페이지 ] 물건 상세 내용!!</h2>
+    .author-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
 
-    {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.image }}">
-    {% endif %}
+    .author-info img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+    }
 
-    <h3>물건 이름 : {{ product.title }}</h3>
-    <a href="{% url "users:profile" product.author.username %}">작성자 : {{ product.author.username }}</a>
-    <p>상세 내용 : {{ product.content }}</p>
-    <p>물건 가격 : {{ product.price }}원</p>
-    <p>작성 일시 : {{ product.created_at }}</p>
-    <p>수정 일시 : {{ product.updated_at }}</p>
-    <p>해시 태그</p>
-    <ul>
+    .author-info .author-name {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    hr {
+        border: 0;
+        height: 1px;
+        background: #333;
+        margin: 20px 0;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .date-info {
+        font-size: 0.9rem;
+        color: #888;
+        margin-bottom: 10px;
+    }
+
+    .product-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #000;
+        margin: 20px 0;
+    }
+
+    .product-content {
+        font-size: 1.1rem;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .hashtag-list {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .hashtag-list li {
+        background-color: #e6e6e6;
+        color: #666;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+    }
+
+    .meta-info {
+        font-size: 0.9rem;
+        color: #999;
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .action-buttons a,
+    .action-buttons form {
+        display: inline-block;
+    }
+
+    .btn-primary {
+        color: #ffffff;
+        background-color: #8aa9e3;
+        border: 1px solid #bababa;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #5571b5;
+        border-color: #5571b5;
+    }
+
+    .btn-danger {
+        color: #ffffff;
+        background-color: #eb8d8d;
+        border: 1px solid #bababa;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #d96262;
+        border-color: #d96262;
+    }
+
+    .btn-outline-secondary {
+        background-color: #ffffff;
+        color: #596066;
+        border: 1px solid #6c757d;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #d0d3d6;
+        border-color: #d0d3d6;
+    }
+
+</style>
+
+<div class="product-detail-container">
+
+    <div class="product-image-container">
+        {% if product.image %}
+            <a href="{{ product.image.url }}" target="_blank">
+                <img src="{{ product.image.url }}" alt="{{ product.title }}_image">
+            </a>
+        {% else %}
+            <img src="{% static 'products/no_image.png' %}" alt="no_image">
+        {% endif %}
+    </div>
+
+    <div class="author-info">
+        {% if product.author.image %}
+            <img src="{{ product.author.image.url }}" alt="{{ product.author.username }}_image">
+        {% else %}
+            <img src="{% static 'users/user.png' %}" alt="no_image">
+        {% endif %}
+        <span class="author-name">{{ product.author.username }}</span>
+    </div>
+
+    <hr>
+
+    <h1>{{ product.title }}</h1>
+
+    <div class="date-info">
+        작성 일자: {{ product.created_at }}<br>
+        수정 일자: {{ product.updated_at }}
+    </div>
+
+    <div class="product-price">
+        {{ product.price }}원
+    </div>
+
+    <div class="product-content">
+        {{ product.content }}
+    </div>
+
+    <ul class="hashtag-list">
         {% for hashtag in hashtags %}
             <li>#{{ hashtag.keyword }}</li>
         {% endfor %}
     </ul>
-    <br>
-    <a href="{% url "products:market" %}">Market 홈으로 돌아가기</a>
-    
-    <br>
-    <a href="{% url "products:update" product.pk %}">
-        <button>수정하기</button>
-    </a>
-    
-    <form action="{% url "products:delete" product.pk %}" method="POST">
-        {% csrf_token %}
-        <input type="submit" value="삭제하기">
-    </form>
+
+    <div class="meta-info">
+        <span>좋아요: {{ like|length }}개</span>
+        <span>조회수: {{ product.views }}회</span>
+    </div>
+
+    <div class="action-buttons">
+        <a href="{% url "products:market" %}" class="btn-outline-secondary">Market으로 돌아가기</a>
+        <div class="right-buttons">
+            <a href="{% url "products:update" product.pk %}" class="btn-primary">수정하기</a>
+            <form action="{% url "products:delete" product.pk %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <input type="submit" value="삭제하기" class="btn-danger">
+            </form>
+        </div>
+    </div>
+
+</div>
 
 {% endblock content %}
