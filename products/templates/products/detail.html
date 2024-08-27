@@ -253,7 +253,11 @@
     </div>
 
     <div class="action-buttons">
-        <a href="{% url "products:market" %}" class="btn-outline-secondary">Market으로 돌아가기</a>
+        {% if page_from == 'like_product' %}
+            <a href="{% url 'users:like_product' username=request.user.username %}" class="btn-outline-secondary">내가 찜한 목록으로 돌아가기</a>
+        {% else %}
+            <a href="{% url "products:market" %}" class="btn-outline-secondary">Market으로 돌아가기</a>
+        {% endif %}
         <div class="right-buttons">
             <a href="{% url "products:update" product.pk %}" class="btn-primary">수정하기</a>
             <form action="{% url "products:delete" product.pk %}" method="POST" style="display: inline;">

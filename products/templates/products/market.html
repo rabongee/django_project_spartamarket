@@ -2,66 +2,162 @@
 {% load static %}
 
 {% block head %}
-<style>            
+<style> 
+
     h1 {
         font-size: 2rem;
         font-weight: 900;
         color: #303030;
         text-align: center;
-        margin-top: 3rem;
+        margin-top: 1rem;
         margin-bottom: 1rem;
     }
-
+    
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+    
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+    
     .col-md-4 {
-        padding-left: 30px; 
-        padding-right: 30px;
+        flex: 1 0 33.3333%;
+        max-width: 33.3333%;
+        padding-left: 15px; 
+        padding-right: 15px;
         padding-bottom: 30px;
+        box-sizing: border-box;
+    }
+    
+    @media (max-width: 768px) {
+        .col-md-4 {
+            flex: 1 0 50%;
+            max-width: 50%;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .col-md-4 {
+            flex: 1 0 100%;
+            max-width: 100%;
+        }
     }
 
-    .card-body {
-        height: 90px;
+    .order-by-container form {
+        display: inline-flex;
+        align-items: center;
     }
-
+    
+    .order-by-container label {
+        margin-right: 10px;
+        white-space: nowrap;
+    }
+    
     .card-img-top {
         width: 100%;
-        height: 300px;
+        height: 250px;
         object-fit: cover;
     }
-
+    
+    .card-body {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-bottom: 15px;
+    }
+    
     .card-title {
         font-weight: 500;
-        font-size: 1.2rem
+        font-size: 1.2rem;
         margin-bottom: 0.5rem;
         white-space: nowrap;
         overflow: hidden;
+        text-overflow: ellipsis;
     }
-
+    
     .card-text {
         font-weight: 900;
         font-size: 1.1rem;
         margin-bottom: 0;
         white-space: nowrap;
         overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .container-fluid.mt-4 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .banner-container img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
     }
 
     .card-footer {
         display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start; 
+        padding: 10px 15px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        min-height: 80px;
     }
 
-    .like-count button {
-        display: inline-flex;
-        align-items: center;
-        text-decoration: none;
-        margin-right: 25px;
+    .card-footer .top-section {
+        display: flex;
+        justify-content: flex-start;
+        gap: 20px;
+        width: 100%;
+        margin-bottom: 10px;
     }
 
+    .hashtag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .hashtag {
+        background-color: #e6e6e6;
+        color: #666;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .like-count,
     .view-count {
         display: flex;
         align-items: center;
     }
     
+    .like-count button {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        color: #dc3545;
+        cursor: pointer;
+    }
+    
     .like-count i,
     .view-count i {
+        margin-left: 5px;
         margin-right: 10px;
     }
     
@@ -69,65 +165,23 @@
     .view-count p {
         margin: 0;
         font-size: 1rem;
+        line-height: 1;
     }
 
-    .banner-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0;
-    }
-    
-    .container-fluid.mt-4 {
-        margin-top: 0 !important;
-        padding-left: 100px;
-        padding-right: 100px;
-        
-    }
-
-    .banner-image {
-        width: auto;
-        height: auto;
-        display: block;
-    }
-
-    .d-flex.justify-content-between {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
-    
-    .order-by-container {
-        flex: 1;
-        text-align: left;
-        align-items: center;
-    }
-
-    .order-by-container form {
-        display: flex;
-        align-items: center;
-    }
-
-    .order-by-container label {
-        margin-right: 10px;
-        white-space: nowrap;
-    }
-    
     .search-container {
         flex: 2;
         display: flex;
         justify-content: center;
-    }
-
-    .search-container input[type="text"] {
-        width: 280px;
         max-width: 100%;
     }
     
-    .add-item-container {
-        flex: 1;
-        text-align: right;
+    .search-container input[type="text"] {
+        flex-grow: 1;
+        min-width: 300px;
+        max-width: 500px;
+        width: 100%;
     }
+        
 </style>
 
 {% endblock head %}
@@ -155,7 +209,7 @@
         
             <div class="search-container">
                 <form action="{% url 'products:search' %}" method="GET" class="d-flex">
-                    <input type="text" name="search" class="form-control mr-2" placeholder="제목, 내용, 작성자, 해시태그">
+                    <input type="text" name="search" class="form-control mr-2" placeholder="제목, 내용, 작성자, 해시태그 검색">
                     <button type="submit" class="btn btn-secondary">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
@@ -177,40 +231,47 @@
                     <div class="card h-100">
 
                         {% if product.image %}
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}_image">
+                            <a href="{% url "products:detail" product.pk %}">
+                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}_image">
+                            </a>
                         {% else %}
-                        <img src="{% static 'products/no_image.png' %}" class="card-img-top" alt="no_image">
+                            <a href="{% url "products:detail" product.pk %}">
+                                <img src="{% static 'products/no_image.png' %}" class="card-img-top" alt="no_image">
+                            </a>
                         {% endif %}
 
                         <div class="card-body">
                             <a href="{% url "products:detail" product.pk %}" class="text-dark text-decoration-none">
                                 <h5 class="card-title">{{ product.title }}</h5>
-                                <p class="card-text">{{ product.price }}원</p>
-                                <ul class="list-inline">
-                                    {% for hashtag in hashtags %}
-                                        <li class="list-inline-item">#{{ hashtag.keyword }}</li>
-                                    {% endfor %}
-                                </ul>
+                                <p class="card-text">{{ product.price }} 원</p>
                             </a>
                         </div>
-                        <div class="card-footer text-right">
-                            <form action="{% url "products:like" product.pk %}" method="POST" class="d-inline">
-                                {% csrf_token %}
-                                <span class="like-count">
-                                    {% if request.user in product.like_users.all %}
-                                        <button class="btn btn-link text-danger">
-                                            <i class="fa-solid fa-heart"></i><p>{{ product.like_count }}</p>
-                                        </button>
-                                    {% else %}
-                                        <button class="btn btn-link text-danger">
-                                            <i class="fa-regular fa-heart"></i><p>{{ product.like_count }}</p>
-                                        </button>
-                                    {% endif %}
+                        <div class="card-footer">
+                            <div class="top-section">
+                                <form action="{% url "products:like" product.pk %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <span class="like-count">
+                                        {% if request.user in product.like_users.all %}
+                                            <button class="btn btn-link text-danger">
+                                                <i class="fa-solid fa-heart"></i><p>{{ product.like_count }} 찜</p>
+                                            </button>
+                                        {% else %}
+                                            <button class="btn btn-link text-danger">
+                                                <i class="fa-regular fa-heart"></i><p>{{ product.like_count }} 찜</p>
+                                            </button>
+                                        {% endif %}
+                                    </span>
+                                </form>
+                                <span class="view-count">
+                                    <i class="fa-solid fa-eye"></i><p>{{ product.views }} 조회</p>
                                 </span>
-                            </form>
-                            <span class="view-count">
-                                <i class="fa-solid fa-eye"></i><p>{{ product.views }}</p>
-                            </span>
+                            </div>
+                            
+                            <div class="hashtag-list">
+                                {% for hashtag in product.hashtags %}
+                                    <span class="hashtag">#{{ hashtag.keyword }}</span>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -22,6 +22,9 @@ def market(request):
         products = Product.objects.annotate(
             like_count=Count('like_users')
         ).order_by(order_by)
+        
+    for product in products:
+        product.hashtags = product.tag_hashtags.all()
 
     context = {
         "products": products,
@@ -36,10 +39,14 @@ def detail(request, pk):
     product.save()
     like = product.like_users.all()
     hashtags = product.tag_hashtags.all()
+    
+    page_from = request.GET.get('ref', 'market')
+        
     context = {
         "product": product,
         "hashtags": hashtags,
         "like": like,
+        "page_from": page_from,
     }
     return render(request, "products/detail.html", context)
 
@@ -137,11 +144,17 @@ def search(request):
         else:
             search_products = Product.objects.none()
             search_type = None
+    
+    hashtags = []
+    if search_products.exists():
+        for product in search_products:
+            hashtags.extend(product.tag_hashtags.all())
 
     context = {
         "search_products": search_products,
         "search_word": search_word,
         "search_type": search_type,
+        "hashtags": hashtags,
     }
     return render(request, 'products/search.html', context)
 
