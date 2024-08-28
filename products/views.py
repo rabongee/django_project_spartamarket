@@ -16,10 +16,13 @@ def market(request):
     order_by = request.GET.get('order_by', '-pk')
 
     if order_by == '-like_count':
-        products = Product.objects.annotate(like_count=Count(
-            'like_users')).order_by('-like_count', '-pk')
+        products = Product.objects.annotate(
+            like_count=Count('like_users')
+        ).order_by('-like_count', '-pk')
     else:
-        products = Product.objects.all().order_by(order_by)
+        products = Product.objects.annotate(
+            like_count=Count('like_users')
+        ).order_by(order_by)
 
     context = {
         "products": products,
@@ -32,12 +35,12 @@ def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     product.views += 1
     product.save()
-    likes = product.like_users.all()
+    like = product.like_users.all()
     hashtags = product.tag_hashtags.all()
     context = {
         "product": product,
         "hashtags": hashtags,
-        "likes": likes,
+        "like": like,
     }
     return render(request, "products/detail.html", context)
 
@@ -99,12 +102,28 @@ def delete(request, pk):
 
 def search(request):
     search_word = request.GET.get("search")
-    search_products = Product.objects.filter(
+    search_products_by_title = Product.objects.filter(
         Q(title__icontains=search_word)
-        | Q(content__icontains=search_word)
-        | Q(author__username__icontains=search_word)).order_by("-pk")
+    ).order_by("-pk")
+    
+    search_products_by_author = Product.objects.filter(
+        Q(author__username__icontains=search_word)
+    ).order_by("-pk")
+
+    if search_products_by_author.exists():
+        search_products = search_products_by_author
+        search_type = "author"
+    elif search_products_by_title.exists():
+        search_products = search_products_by_title
+        search_type = "title"
+    else:
+        search_products = Product.objects.none()
+        search_type = None
+
     context = {
-        "search_products": search_products
+        "search_products": search_products,
+        "search_word": search_word,
+        "search_type": search_type,
     }
     return render(request, 'products/search.html', context)
 
