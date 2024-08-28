@@ -175,6 +175,16 @@
         border-color: #d0d3d6;
     }
 
+    .author-name {
+        text-decoration: none;
+        padding-bottom: 2px;
+        border-bottom: 2px solid transparent;
+    }
+    
+    .author-name:hover {
+        border-bottom: 1.5px solid #b0b0b0; 
+    }
+
 </style>
 
 <div class="product-detail-container">
@@ -191,11 +201,15 @@
 
     <div class="author-info">
         {% if product.author.image %}
-            <img src="{{ product.author.image.url }}" alt="{{ product.author.username }}_image">
+            <a href="{% url 'users:profile' product.author.username %}">
+                <img src="{{ product.author.image.url }}" alt="{{ product.author.username }}_image">
+            </a>
         {% else %}
-            <img src="{% static 'users/user.png' %}" alt="no_image">
+            <a href="{% url 'users:profile' product.author.username %}">
+                <img src="{% static 'users/user.png' %}" alt="no_image">
+            </a>
         {% endif %}
-        <span class="author-name">{{ product.author.username }}</span>
+        <a href="{% url 'users:profile' product.author.username %}" class="author-name">{{ product.author.username }}</a>
     </div>
 
     <hr>
@@ -203,8 +217,8 @@
     <h1>{{ product.title }}</h1>
 
     <div class="date-info">
-        작성 일자: {{ product.created_at }}<br>
-        수정 일자: {{ product.updated_at }}
+        작성일자: {{ product.created_at }}<br>
+        수정일자: {{ product.updated_at }}
     </div>
 
     <div class="product-price">
@@ -221,13 +235,21 @@
         {% endfor %}
     </ul>
 
+    <hr>
+
     <div class="meta-info">
         <span>좋아요: {{ like|length }}개</span>
         <span>조회수: {{ product.views }}회</span>
     </div>
 
     <div class="action-buttons">
-        <a href="{% url "products:market" %}" class="btn-outline-secondary">Market으로 돌아가기</a>
+        {% if page_from == 'like_product' %}
+            <a href="{% url 'users:like_product' username=request.user.username %}" class="btn-outline-secondary">내가 찜한 목록으로 돌아가기</a>
+        {% elif page_from == 'my_product' %}
+            <a href="{% url 'users:my_product' username=request.user.username %}" class="btn-outline-secondary">내가 작성한 목록으로 돌아가기</a>
+        {% else %}
+            <a href="{% url "products:market" %}" class="btn-outline-secondary">Market으로 돌아가기</a>
+        {% endif %}
         <div class="right-buttons">
             <a href="{% url "products:update" product.pk %}" class="btn-primary">수정하기</a>
             <form action="{% url "products:delete" product.pk %}" method="POST" style="display: inline;">

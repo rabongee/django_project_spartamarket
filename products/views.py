@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib import messages
 from .models import Product
-from accounts.models import User
 from .forms import ProductForm
 
 
@@ -23,6 +22,9 @@ def market(request):
         products = Product.objects.annotate(
             like_count=Count('like_users')
         ).order_by(order_by)
+        
+    for product in products:
+        product.hashtags = product.tag_hashtags.all()
 
     context = {
         "products": products,
@@ -37,10 +39,14 @@ def detail(request, pk):
     product.save()
     like = product.like_users.all()
     hashtags = product.tag_hashtags.all()
+    
+    page_from = request.GET.get('ref', 'market')
+        
     context = {
         "product": product,
         "hashtags": hashtags,
         "like": like,
+        "page_from": page_from,
     }
     return render(request, "products/detail.html", context)
 
@@ -56,7 +62,6 @@ def create(request):
             product.save()
             hashtags = form.cleaned_data.get('hashtags', [])
             product.add_hashtags(hashtags)
-            messages.success(request, "등록이 완료되었습니다!!!  확인해보세요!")
             return redirect("products:detail", product.pk)
     else:
         form = ProductForm()
@@ -69,6 +74,11 @@ def create(request):
 @require_http_methods(["GET", "POST"])
 def update(request, pk):
     product = get_object_or_404(Product, pk=pk)
+    
+    if product.author != request.user:
+        messages.error(request, "남의 게시물은 수정할 수 없습니다!!!")
+        return redirect("products:market")
+    
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
@@ -96,34 +106,65 @@ def update(request, pk):
 def delete(request, pk):
     if request.user.is_authenticated:
         product = get_object_or_404(Product, pk=pk)
-        product.delete()
+        if product.author == request.user:
+            product.delete()
+            messages.success(request, "게시물이 삭제되었습니다!!!")
+        else:
+            messages.error(request, "남의 게시물은 삭제할 수 없습니다!!!")
+    else:
+        messages.error(request, "삭제하려면 로그인하세요!!!")
     return redirect("products:market")
 
 
 def search(request):
     search_word = request.GET.get("search")
-    search_products_by_title = Product.objects.filter(
-        Q(title__icontains=search_word)
-    ).order_by("-pk")
     
-    search_products_by_author = Product.objects.filter(
-        Q(author__username__icontains=search_word)
-    ).order_by("-pk")
-
-    if search_products_by_author.exists():
-        search_products = search_products_by_author
-        search_type = "author"
-    elif search_products_by_title.exists():
-        search_products = search_products_by_title
-        search_type = "title"
-    else:
+    if not search_word:
         search_products = Product.objects.none()
         search_type = None
+    else:
+        search_by_title = Product.objects.filter(
+            Q(title__icontains=search_word)
+        ).order_by("-pk")
+        
+        search_by_content = Product.objects.filter(
+            Q(content__icontains=search_word)
+        ).order_by("-pk")
+        
+        search_by_author = Product.objects.filter(
+            Q(author__username__icontains=search_word)
+        ).order_by("-pk")
+        
+        search_by_hashtag = Product.objects.filter(
+            Q(tag_hashtags__keyword__icontains=search_word)
+        ).order_by("-pk")
+
+        if search_by_title.exists():
+            search_products = search_by_title
+            search_type = "title"
+        elif search_by_content.exists():
+            search_products = search_by_content
+            search_type = "content"
+        elif search_by_author.exists():
+            search_products = search_by_author
+            search_type = "author"
+        elif search_by_hashtag.exists():
+            search_products = search_by_hashtag
+            search_type = "hashtag"
+        else:
+            search_products = Product.objects.none()
+            search_type = None
+    
+    hashtags = []
+    if search_products.exists():
+        for product in search_products:
+            hashtags.extend(product.tag_hashtags.all())
 
     context = {
         "search_products": search_products,
         "search_word": search_word,
         "search_type": search_type,
+        "hashtags": hashtags,
     }
     return render(request, 'products/search.html', context)
 
