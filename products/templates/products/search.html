@@ -173,17 +173,7 @@
     <div class="container mt-4">
         <h1 class="text-center mb-4">
             <i class="fa-solid fa-magnifying-glass"></i> 
-            {% if search_type == "title" %}
-                [ "{{ search_word }}" in 글 제목 ]
-            {% elif search_type == "content" %}
-                [ "{{ search_word }}" in 글 내용 ]
-            {% elif search_type == "author" %}
-                [ 작성자 == "{{ search_word }}" ]
-            {% elif search_type == "hashtag" %}
-                [ 해시태그 == "{{ search_word }}" ]
-            {% else %}
-                "{{ search_word }}"에 대한 검색결과 == None
-            {% endif %}
+                "{{ search_word }}"에 대한 검색결과
         </h1>
         
         {% if search_products %}
