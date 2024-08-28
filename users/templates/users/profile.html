@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+    .profile-img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+{% endblock head %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card p-4">
+        <div class="text-center">
+            <h1 class="card-title">{{ member.username }}의 프로필</h1>
+            <div class="mb-4">
+                {% if member.image %}
+                    <img src="{{ member.image.url }}" alt="{{ member.image }}" class="rounded-circle img-thumbnail profile-img">
+                {% else %}
+                    <img src="{% static 'users/user.png' %}" alt="Default Image" class="rounded-circle img-thumbnail profile-img">
+                {% endif %}
+            </div>
+            <p class="card-text"><strong>username:</strong> {{ member.username }}</p>
+            <p class="card-text"><strong>가입일:</strong> {{ member.date_joined|date:"Y년 m월 d일" }}</p>
+            <p class="card-text"><strong>{{ member.username }}의 팔로워 수:</strong> {{ followers }}</p>
+            <p class="card-text"><strong>{{ member.username }}의 팔로잉 수:</strong> {{ followings }}</p>
+        </div>
+
+        <div class="text-center">
+            {% if request.user == member %}
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'users:my_product' member.username %}" class="btn btn-primary m-2">나의 게시물</a>
+                    <a href="{% url 'users:like_product' member.username %}" class="btn btn-primary m-2">내가 찜한 게시물</a>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'accounts:update' %}" class="btn btn-warning m-2">회원정보수정</a>
+                    <form action="{% url 'accounts:delete' %}" method="POST" class="m-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">회원탈퇴</button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'users:my_product' member.username %}" class="btn btn-primary m-2">{{ member.username }}의 게시물</a>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <form action="{% url 'users:follow' member.pk %}" method="post" class="m-2">
+                        {% csrf_token %}
+                        {% if request.user in member.followers.all %}
+                            <button type="submit" class="btn btn-danger">언팔로우</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-success">팔로우</button>
+                        {% endif %}
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url "products:market" %}" class="btn btn-secondary">홈으로 돌아가기</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

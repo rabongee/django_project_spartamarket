@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+    h1 {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #303030;
+        text-align: center;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+    
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+    
+    .col-md-4 {
+        flex: 1 0 33.3333%;
+        max-width: 33.3333%;
+        padding-left: 15px; 
+        padding-right: 15px;
+        padding-bottom: 30px;
+        box-sizing: border-box;
+    }
+    
+    @media (max-width: 768px) {
+        .col-md-4 {
+            flex: 1 0 50%;
+            max-width: 50%;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .col-md-4 {
+            flex: 1 0 100%;
+            max-width: 100%;
+        }
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    .card-body {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-bottom: 15px;
+    }
+    
+    .card-title {
+        font-weight: 500;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .card-text {
+        font-weight: 900;
+        font-size: 1.1rem;
+        margin-bottom: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .container-fluid.mt-4 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .card-footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start; 
+        padding: 10px 15px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        min-height: 80px;
+    }
+
+    .card-footer .top-section {
+        display: flex;
+        justify-content: flex-start;
+        gap: 20px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .hashtag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .hashtag {
+        background-color: #e6e6e6;
+        color: #666;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .like-count,
+    .view-count {
+        display: flex;
+        align-items: center;
+    }
+    
+    .like-count button {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        color: #dc3545;
+        cursor: pointer;
+    }
+    
+    .like-count i,
+    .view-count i {
+        margin-left: 5px;
+        margin-right: 10px;
+    }
+    
+    .like-count p,
+    .view-count p {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1;
+    }
+
+</style>
+{% endblock head %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">작성한 목록</h1>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+
+                {% if product.image %}
+                <a href="{% url 'products:detail' product.pk %}?ref=my_product">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}_image">
+                </a>
+                {% else %}
+                <a href="{% url 'products:detail' product.pk %}?ref=my_product">
+                    <img src="{% static 'products/no_image.png' %}" class="card-img-top" alt="no_image">
+                </a>
+                {% endif %}
+
+                <div class="card-body">
+                    <a href="{% url 'products:detail' product.pk %}?ref=my_product" class="text-dark text-decoration-none">
+                        <h5 class="card-title">{{ product.title }}</h5>
+                        <p class="card-text">{{ product.price }} 원</p>
+                    </a>
+                </div>
+                <div class="card-footer">
+                    <div class="top-section">
+                        <form action="{% url 'products:like' product.pk %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <span class="like-count">
+                                {% if request.user in product.like_users.all %}
+                                    <button class="btn btn-link text-danger">
+                                        <i class="fa-solid fa-heart"></i><p>{{ product.like_count }} 찜</p>
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-link text-danger">
+                                        <i class="fa-regular fa-heart"></i><p>{{ product.like_count }} 찜</p>
+                                    </button>
+                                {% endif %}
+                            </span>
+                        </form>
+                        <span class="view-count">
+                            <i class="fa-solid fa-eye"></i><p>{{ product.views }} 조회</p>
+                        </span>
+                    </div>
+
+                    <div class="hashtag-list">
+                        {% for hashtag in product.tag_hashtags.all %}
+                            <span class="hashtag">#{{ hashtag.keyword }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'users:profile' username %}" class="btn btn-secondary">프로필로 돌아가기</a>
+    </div>
+</div>
+{% endblock content %}

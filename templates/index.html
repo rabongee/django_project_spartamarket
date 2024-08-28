@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+    body {
+        margin-top: 0;
+    }
+
+    .image-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .image-container img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+</style>
+{% endblock head %}
+
+{% block content %}
+    <div class="image-container">
+        <img src="{% static 'images/index.png' %}" alt="Index Image">
+        <img src="{% static 'images/introduce.png' %}" alt="Introduce Image">
+        <img src="{% static 'images/func.png' %}" alt="Functionality Image">
+    </div>
+{% endblock content %}

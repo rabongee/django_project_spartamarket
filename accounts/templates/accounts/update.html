@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    .update-profile-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 40px;
+        background-color: #f8f9fa;
+        border: 1.5px solid #b3b3b3;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 100px;
+    }
+
+    .update-profile-container h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        color: #303030;
+    }
+
+    .update-profile-container input[type="text"],
+    .update-profile-container input[type="password"],
+    .update-profile-container input[type="email"],
+    .update-profile-container input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 1.5rem;
+        border: 1.5px solid #b3b3b3;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .update-profile-container button[type="submit"] {
+        width: 100%;
+        color: #ffffff;
+        background-color: #8aa9e3;
+        border-color: #cfcfcf;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 7px;
+        cursor: pointer;
+    }
+
+    .update-profile-container button[type="submit"]:hover {
+        color: #ffffff;
+        background-color: #5571b5;
+        border-color: #5571b5;
+    }
+</style>
+{% endblock head %}
+
+{% block content %}
+    <div class="update-profile-container">
+        <h1>회원 정보 수정</h1>
+
+        <form action="{% url "accounts:update" %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">수정</button>
+        </form>
+    </div>
+{% endblock %}
